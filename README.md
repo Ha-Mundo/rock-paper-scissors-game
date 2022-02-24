@@ -1,2 +1,3 @@
-# rock-paper-scissors-game-
+# rock-paper-scissors-game
+
 Simple implementation of Rock Paper Scissors game.
