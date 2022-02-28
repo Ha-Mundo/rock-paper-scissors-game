@@ -1,3 +1,6 @@
+// First stage | Game in the browser console
+console.log("Game Start!");
+
 let playerScores = 0;
 let computerScores = 0;
 let playerSelection;
