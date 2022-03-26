@@ -12,7 +12,57 @@
     <link href="css/duotone.min.css" rel="stylesheet" />
     <link type="text/css" rel="stylesheet" href="css/normalize.css" />
     <link type="text/css" rel="stylesheet" href="css/styles.css" />
-    <script type="text/javascript" src="scripts.js" defer></script>
+    <!-- <script type="text/javascript" src="scripts.js" defer></script> -->
   </head>
-  <body></body>
+  <body>
+    <header class="gameHeader">
+      <h1>
+        <span class="purple-color">Paper</span>&nbsp;
+        <span class="green-color">Scissors</span>&nbsp;
+        <span class="red-color">Rock</span>
+      </h1>
+
+      <p>
+        <span class="purple-color">Paper</span> beats
+        <span class="red-color">Rock</span> ︱
+        <span class="red-color">Rock</span> beats
+        <span class="green-color">Scissors</span> ︱
+        <span class="green-color">Scissors</span> beats
+        <span class="purple-color">Paper</span>
+      </p>
+    </header>
+    <main class="main-content">
+      <div class="game-output">
+        <div class="computer-play-div grey-border centering">
+          <p class="computer-title">Enemy's Weapon</p>
+          <i class="computer-icon fad fa-question-square"></i>
+        </div>
+        <div class="game-results">
+          <p class="round">Round: 0</p>
+          <p class="lives">Your Lives: 5 ︱ Enemy's Lives: 5</p>
+          <p class="combat-text">Battle Text: Empty</p>
+        </div>
+      </div>
+
+      <div class="game-end-div">
+        <p class="game-end-text"></p>
+        <button class="start-Game play-again">Press Start</button>
+      </div>
+
+      <div class="weapons-area">
+        <button class="Paper-button weapon-button">
+          <i class="fad fa-hand-paper weapon-icon Paper-icon"></i>
+        </button>
+        <button class="scissors-button weapon-button">
+          <i class="fad fa-hand-peace weapon-icon scissors-icon"></i>
+        </button>
+        <button class="rock-button weapon-button">
+          <i class="fad fa-hand-rock weapon-icon rock-icon"></i>
+        </button>
+      </div>
+    </main>
+    <!-- <footer class="copyright">
+      <p>Crafted by Hamundo </p>
+    </footer> -->
+  </body>
 </html>
