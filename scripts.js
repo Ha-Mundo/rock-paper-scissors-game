@@ -1,74 +1,123 @@
-// First stage | Game in the browser console
-console.log("Game Start!");
+const gameOutput = document.querySelector(".game-output");
+const weaponsArea = document.querySelector(".weapons-area");
+const weaponsButtons = document.querySelectorAll(".weapon-button");
+const rounds = document.querySelector(".round");
+const combatText = document.querySelector(".combat-text");
+const buttonPlayAgain = document.querySelector(".play-again");
 
-let playerScores = 0;
-let computerScores = 0;
-let playerSelection;
-let computerSelection;
-let roundResult;
+let playerLives = 5;
+let computerLives = 5;
+let round = 0;
 
-function playerGame() {
-  const playerSelection = prompt("•° rock | paper | scissors °•").toLowerCase();
-  if (playerSelection.match("^(rock|paper|scissors)$")) return playerSelection;
-  else if (playerSelection === "")
-    return "Null input not allowed!\nPlease type: rock | paper | scissors";
-  else
-    return `You can't type ${playerSelection}!\nPlease type: rock | paper | scissors`;
+function countRounds() {
+  round += 1;
+  rounds.innerText = `Round: ${round}`;
+  return round;
+}
+
+function startGame() {
+  buttonPlayAgain.addEventListener("click", () => {
+    buttonPlayAgain.style.visibility = "hidden";
+    weaponsArea.style.visibility = "visible";
+    gameOutput.style.visibility = "visible";
+  });
 }
 
 function computerPlay() {
   const weapons = ["rock", "paper", "scissors"];
   const computerSelection = weapons[Math.floor(Math.random() * weapons.length)];
+
+  const computerIcon = document.querySelector(".computer-icon");
+  computerIcon.classList.remove(
+    "fa-question-square",
+    "fa-hand-paper",
+    "fa-hand-peace",
+    "fa-hand-rock"
+  );
+
+  if (computerSelection === "paper") {
+    computerIcon.classList.add("fa-hand-paper");
+  } else if (computerSelection === "scissors") {
+    computerIcon.classList.add("fa-hand-peace");
+  } else {
+    computerIcon.classList.add("fa-hand-rock");
+  }
+
   return computerSelection;
 }
 
 function playRound(playerSelection, computerSelection) {
-  let result;
+  const computerPlayDiv = document.querySelector(".computer-play-div");
   switch (true) {
     case playerSelection === computerSelection:
-      result = `Your choice is ${playerSelection} | Computer's choice is ${computerSelection}.\nA draw, because both chose ${playerSelection} (* ￣︿￣)\nThe scores remain the same → ${playerScores} | ${computerScores}`;
+      combatText.innerText = `Hmm.. Two ${playerSelection}s means a draw, so no lives were lost. Let's try again.`;
       break;
-    case playerSelection === "rock" && computerSelection === "scissors":
-    case playerSelection === "scissors" && computerSelection === "paper":
     case playerSelection === "paper" && computerSelection === "rock":
-      playerScores += 1;
-      result = `Your choice is ${playerSelection} | Computer's choice is ${computerSelection}.\nYou won, because ${playerSelection} beats ${computerSelection} (★‿★)\nYour score is → ${playerScores} | Computer's score is → ${computerScores}`;
-      break;
-    case computerSelection === "rock" && playerSelection === "scissors":
-    case computerSelection === "scissors" && playerSelection === "paper":
-    case computerSelection === "paper" && playerSelection === "rock":
-      computerScores += 1;
-      result = `Your choice is ${playerSelection} | Computer's choice is ${computerSelection}.\nYou lost, because ${computerSelection} beats ${playerSelection} (•ˋ_ˊ•)\nYour score is → ${playerScores} | Computer's score is → ${computerScores}`;
+    case playerSelection === "scissors" && computerSelection === "paper":
+    case playerSelection === "rock" && computerSelection === "scissors":
+      combatText.innerText = `Nice move! The enemy lost one life, because ${playerSelection} beats ${computerSelection}!`;
+      computerLives -= 1;
       break;
     default:
-      result = `${playerSelection}\nThe scores remain the same → ${playerScores} | ${computerScores}\nINVALID ROUND! (╯°□°）╯︵ ┻━┻`;
-  }
-  return result;
-}
-
-function game() {
-  for (let round = 0; round < 5; round++) {
-    playerSelection = playerGame();
-    computerSelection = computerPlay();
-    roundResult = playRound(playerSelection, computerSelection);
-    console.log(roundResult);
+      combatText.innerText = `Unlucky move.. You lost one life, because   ${computerSelection} beats your ${playerSelection}!`;
+      playerLives -= 1;
+      break;
   }
 
-  if (playerScores > computerScores)
-    console.log(
-      `FINAL SCORE: ${playerScores} | ${computerScores}\n%cYOU WON THE GAME ╰(*°▽°*)╯`,
-      "color:green;"
-    );
-  else if (playerScores < computerScores)
-    console.log(
-      `FINAL SCORE: ${playerScores} | ${computerScores}\n%cYOU LOST THE GAME! •°◦(＞﹏＜)◦°•`,
-      "color:red;"
-    );
-  else
-    console.log(
-      `FINAL SCORE: ${playerScores} | ${computerScores}\n%cA DRAW TRY AGAIN! o(一︿一+)o`,
-      "color:purple;"
-    );
+  const lives = document.querySelector(".lives");
+  lives.innerText = `Your Lives: ${playerLives} ︱ Enemy's Lives: ${computerLives}`;
+  return [playerLives, computerLives];
 }
 
-game();
+function endGame(playerHealth, computerHealth) {
+  if (playerHealth === 0 || computerHealth === 0) {
+    weaponsButtons.forEach(button => {
+      button.setAttribute("disabled", "");
+      button.classList.add("disabled-button", "opacity");
+      weaponsArea.style.display = "none";
+    });
+
+    const computerIcon = document.querySelector(".computer-icon");
+    computerIcon.style.opacity = "0.5";
+
+    const gameEndText = document.querySelector(".game-end-text");
+    if (playerLives > computerLives) {
+      combatText.innerText = "Great!!! The enemy has no lives left...";
+      gameEndText.textContent = "You Won This Battle!";
+    } else {
+      combatText.innerText = "Ouch.. No lives left for you.";
+      gameEndText.textContent = "You Lost This Battle!";
+    }
+    buttonPlayAgain.style.visibility = "visible";
+  }
+}
+
+function resetGame() {
+  buttonPlayAgain.textContent = "Fight Again!";
+  buttonPlayAgain.addEventListener("click", () => {
+    window.location.reload();
+  });
+}
+
+function playerGame() {
+  let playerSelection;
+  weaponsButtons.forEach(weapon => {
+    weapon.addEventListener("click", () => {
+      if (weapon.classList.contains("paper-button")) {
+        playerSelection = "paper";
+      } else if (weapon.classList.contains("scissors-button")) {
+        playerSelection = "scissors";
+      } else {
+        playerSelection = "rock";
+      }
+      console.log(playerSelection);
+      playRound(playerSelection, computerPlay());
+      countRounds();
+      endGame(playerLives, computerLives);
+      resetGame();
+    });
+  });
+  startGame();
+}
+
+playerGame();
